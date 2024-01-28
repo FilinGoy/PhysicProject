@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+
+<html lang="ru">
+
+<head>
+<title>Маятник Ньютона</title>
+<meta charset="utf-8">
+<style>
+div#total { width: 620px; height: 400px; }
+div#canvas { width: 400px; height: 400px; }
+div#panel { left: 400px; width: 220px; height: 400px; } 
+button { width: 200px; }
+select { width: 200px; }
+.pos1 { left: 10px; }
+</style>
+<script src="newtoncradle.js"></script>
+<meta name="description" content="HTML5-App: Newtons Wiege (Demonstration von Impuls- und Energieerhaltung)">
+<meta name="keywords" content="App, Physik, Mechanik, Energie, Impuls, Erhaltungss&auml;tze">
+</head>
+
+<body>
+
+<h1>Маятник Ньютона</h1>
+
+<div id="total">
+  <div id="canvas"><canvas id="cv" width=400 height=400>This browser doesn't support HTML5 canvas!</canvas></div>
+  <div id="panel">
+    <div style="top: 30px;"><button id="bu1" style="background-color: #00ffff;"></button></div>
+    <div style="top: 80px;"><button id="bu2" style="background-color: #ffff00;"></button></div>
+    <div style="top: 150px;"><span class="pos1" id="number"></span></div>
+    <div style="top: 190px;"><select id="ch">
+      <option>&nbsp;&nbsp; 1</option>
+      <option>&nbsp;&nbsp; 2</option>
+      <option>&nbsp;&nbsp; 3</option>
+      <option>&nbsp;&nbsp; 4</option>
+    </select></div>
+  </div>
+</div>
+</body>
+
+</html>

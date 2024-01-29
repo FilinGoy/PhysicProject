@@ -3,39 +3,42 @@
 <html lang="ru">
 
 <head>
-<title>Маятник Ньютона</title>
+<title>Простой маятник</title>
 <meta charset="utf-8">
 <style>
-div#total { width: 620px; height: 400px; }
-div#canvas { width: 400px; height: 400px; }
-div#panel { left: 400px; width: 220px; height: 400px; } 
-button { width: 200px; }
-select { width: 200px; }
-.pos1 { left: 10px; }
+  div#total { width: 820px; height: 420px; }
+  div#canvas { width: 560px; height: 420px; }
+  div#panel { left: 560px; width: 260px; height: 420px; } 
+  button { width: 240px; }
+  input[type="text"] { left: 130px; width: 80px; }
+  .pos1 { left: 10px; }
+  .pos3 { left: 225px; }
 </style>
-<script src="newtoncradle.js"></script>
-<meta name="description" content="HTML5-App: Newtons Wiege (Demonstration von Impuls- und Energieerhaltung)">
-<meta name="keywords" content="App, Physik, Mechanik, Energie, Impuls, Erhaltungss&auml;tze">
+<link rel="stylesheet" href="style.css">
+<script src="script.js"></script>
 </head>
 
 <body>
 
-<h1>Маятник Ньютона</h1>
+<h1>Простой маятник</h1>
 
 <div id="total">
-  <div id="canvas"><canvas id="cv" width=400 height=400>This browser doesn't support HTML5 canvas!</canvas></div>
+  <div id="canvas"><canvas id="cv" width=540 height=420></canvas></div>
   <div id="panel">
-    <div style="top: 30px;"><button id="bu1" style="background-color: #00ffff;"></button></div>
-    <div style="top: 80px;"><button id="bu2" style="background-color: #ffff00;"></button></div>
-    <div style="top: 150px;"><span class="pos1" id="number"></span></div>
-    <div style="top: 190px;"><select id="ch">
-      <option>&nbsp;&nbsp; 1</option>
-      <option>&nbsp;&nbsp; 2</option>
-      <option>&nbsp;&nbsp; 3</option>
-      <option>&nbsp;&nbsp; 4</option>
-    </select></div>
+    <div style="top: 10px;"><button id="bu1"></button></div>
+    <div style="top: 50px;"><button id="bu2"></button></div>
+    <div style="top: 95px;"><input type="checkbox" id="cbSlow" name="cbSlow" value=""><label for="cbSlow" id="lbSlow"></label></div>
+    <div style="top: 130px;"><span class="pos1" id="ipLa"></span><input type="text" id="ipLb"><span class="pos3" id="ipLc"></span></div>
+    <div style="top: 155px;"><span class="pos1" id="ipGx"></span></div>
+    <div style="top: 170px;"><span class="pos1" id="ipGa"></span><input type="text" id="ipGb"><span class="pos3" id="ipGc"></span></div>
+    <div style="top: 200px;"><span class="pos1" id="ipMa"></span><input type="text" id="ipMb"><span class="pos3" id="ipMc"></span></div>
+    <div style="top: 230px;"><span class="pos1" id="ipAa"></span><input type="text" id="ipAb"><span class="pos3" id="ipAc"></span></div>
+    <div style="top: 255px;"><input type="radio" id="rbY" name="bg" value=""><label id="lbY" for="rbY"></label></div>
+    <div style="top: 280px;"><input type="radio" id="rbV" name="bg" value=""><label id="lbV" for="rbV"></label></div>
+    <div style="top: 305px;"><input type="radio" id="rbA" name="bg" value=""><label id="lbA" for="rbA"></label></div>
+    <div style="top: 330px;"><input type="radio" id="rbF" name="bg" value=""><label id="lbF" for="rbF"></label></div>
+    <div style="top: 355px;"><input type="radio" id="rbE" name="bg" value=""><label id="lbE" for="rbE"></label></div>
   </div>
 </div>
 </body>
-
 </html>

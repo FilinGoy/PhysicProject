@@ -1,83 +1,75 @@
-// Fadenpendel
-// Java-Applet (21.05.1998) umgewandelt
-// 14.09.2014 - 13.08.2023
+// Цвета:
 
-// ****************************************************************************
-// **************************************************************************** 
+var colorBackground = "#ffffff";                           // Цвет фона
+var colorClock1 = "#808080";                               // Цвет цифровых часов (auoen)
+var colorClock2 = "#000000";                               // Цвет фона дисплея
+var colorClock3 = "#ff0000";                               // Цвет цифр
+var colorElongation = "#008000";                           // Цвет для потенциальной
+var colorVelocity = "#ff0000";                             // Цвет для кинетической
+var colorAcceleration = "#0000ff";                         // Цвет для ускорения
+var colorForce = "#008020";                                // Цвет для силы
+var colorBody = "#ffffff";                                 // Цвет корпуса маятника
 
-// Sprachabh�ngige Texte sind einer eigenen Datei (zum Beispiel pendulum_de.js) abgespeichert.
+// Другие константы:
 
-// Farben:
+var DEG = Math.PI / 180;                                   // Угловой градус
+var ax = 120, ay = 30;                                     // Положение подвеса (пиксели)
+var xD = 260;                                              // начало координат x
+var yD1 = 180, yD2 = 165;                                  // Начало координат y
+var FONT1 = "normal normal bold 12px sans-serif";          // Набор символов
+var tPix = 20;                                             // Коэффициент преобразования (пикселей в секунду)
 
-var colorBackground = "#ffffff";                           // Hintergrundfarbe
-var colorClock1 = "#808080";                               // Farbe der Digitaluhr (au�en)
-var colorClock2 = "#000000";                               // Hintergrundfarbe der Anzeige
-var colorClock3 = "#ff0000";                               // Farbe der Ziffern
-var colorElongation = "#ff0000";                           // Farbe f�r Elongation
-var colorVelocity = "#ff00ff";                             // Farbe f�r Geschwindigkeit
-var colorAcceleration = "#0000ff";                         // Farbe f�r Beschleunigung
-var colorForce = "#008020";                                // Farbe f�r Kraft
-var colorBody = "#ffffff";                                 // Farbe des Pendelk�rpers
-
-// Sonstige Konstanten:
-
-var DEG = Math.PI / 180;                                     // Winkelgrad
-var ax = 120, ay = 30;                                     // Position der Aufh�ngung (Pixel)
-var xD = 260;                                              // x-Koordinate Ursprung
-var yD1 = 180, yD2 = 165;                                  // y-Koordinate Ursprung
-var FONT1 = "normal normal bold 12px sans-serif";          // Zeichensatz
-var tPix = 20;                                             // Umrechnungsfaktor (Pixel pro s)
-
-var text01 = "Сброс";             // Zur�ck
+var text01 = "Сброс";             // Сброс
 var text02 = ["Старт", "Пауза", "Продолжить"];
-var text03 = "Замедленное движение";                         // Zeitlupe (2)
-var text04 = "Длина маятника:";              // Pendell�nge (2)
-var text05x = "Гравитационное";                                // Fallbeschleunigung (2)
-var text05 = "ускорение:";        // Fallbeschleunigung (3)
-var text06 = "Масса:";                                // Masse
-var text07 = "Амплитуда:";        // Amplitude
-var text08 = "Отклонение";   // Elongation
-var text09 = "Скорость";               // Geschwindigkeit
-var text10 = "Ускорение";         // Beschleunigung
-var text11 = "Сила";                                       // Kraft
-var text12 = "Энергия";                     // Energie
+var text03 = "Замедленное движение";                         // Замедленное движение (2)
+var text04 = "Длина маятника:";              // Длина маятника (2)
+var text05x = "Гравитационное";                                // Ускорение падения (2)
+var text05 = "ускорение:";        // Ускорение падения (3)
+var text06 = "Масса:";                                // Масса
+var text07 = "Амплитуда:";        // Амплитуда
+var text08 = "Отклонение";   // Удлинение
+var text09 = "Скорость";               // Скорость
+var text10 = "Ускорение";         // Ускорение
+var text11 = "Сила";                                       // Сила
+var text12 = "Энергия";                     // Энергия
+var textNothing = "Отключить";                     // Энергия
 
-// Symbole und Einheiten:
+// Символы и единицы измерения:
 
-var decimalSeparator = ",";                                // Dezimaltrennzeichen (Komma/Punkt)
+var decimalSeparator = ",";                                // Десятичный разделитель (запятая/ точка)
 
-var meter = "м";
-var meterPerSecond2 = "м/с&sup2;";
-var kilogram = "кг";
-var degree = "&deg; (градусов)";
+var meter = "м (лимит 0,5-10)";
+var meterPerSecond2 = "м/с&sup2 (лимит 1-100);";
+var kilogram = "кг (лимит 1-10)";
+var degree = "&deg; (лимит 2-20)";
 
-var text13 = "Максимум";               // Maximum
-var text14 = "Отклонение";   // Elongation
-var text15 = "Скорость";               // Geschwindigkeit
-var text16 = "Ускорение (объекта)";  // Beschleunigung, tangentiale Komponente (3)
-var text17 = "Сила (объекта)";  // Kraft, tangentiale Komponente (3)
-var text18 = "Потенциальная энергия";                                         // Potentielle Energie (2)
-var text19 = "Кинетическая энергия";                                         // Kinetische Energie (2)
-var text20 = "Полная энергия";                     // Gesamtenergie (2)
-var text21 = "(с)";                                   // Einheit f�r Zeitachse (s)
-var text22 = "(м)";                                   // Einheit f�r senkrechte Achse (m)
-var text23 = "(м/с)";                            // Einheit f�r senkrechte Achse (m/s)
-var text24 = "(м/с²)";                      // Einheit f�r senkrechte Achse (m/s�)
-var text25 = "(Н)";                                   // Einheit f�r senkrechte Achse (N)
-var text26 = "(Дж)";                             // Einheit f�r senkrechte Achse (J)
-var text27 = "Период колебаний";         // Schwingungsdauer (2)
+var text13 = "Максимум";               // Максимум
+var text14 = "Отклонение";   // Удлинение
+var text15 = "Скорость";               // Скорость
+var text16 = "Ускорение (объекта)";  // Ускорение, тангенциальная составляющая (3)
+var text17 = "Сила (объекта)";  // Сила, тангенциальная составляющая (3)
+var text18 = "Потенциальная энергия";                                         // Потенциальная энергия (2)
+var text19 = "Кинетическая энергия";                                         // Кинетическая энергия (2)
+var text20 = "Полная энергия";                     // Полная энергия (2)
+var text21 = "(с)";                                   // Единица измерения для Временная шкала (ы)
+var text22 = "(м)";                                   // Единица измерения для вертикальной оси (м)
+var text23 = "(м/с)";                            // Единица измерения для вертикальной оси (м/с)
+var text24 = "(м/с²)";                      // Единица измерения для вертикальной оси (м/со)
+var text25 = "(Н)";                                   // Единица измерения для вертикальной оси (N)
+var text26 = "(Дж)";                             // Единица измерения для вертикальной оси (J)
+var text27 = "Период колебаний";         // Период колебаний (2)
 
-// Symbole und Einheiten:
+// Символы и единицы измерения:
 
-var symbolTime = "t";                                      // Symbol f�r Zeit
-var symbolElongation = "s";                                // Symbol f�r Elongation
-var symbolVelocity = "v";                                  // Symbol f�r Geschwindigkeit
-var symbolAcceleration = "a";                              // Symbol f�r Beschleunigung
-var symbolTangential = "tang";                             // Symbol f�r tangential
-var symbolForce = "F";                                     // Symbol f�r Kraft
-var symbolEnergy = "E";                                    // Symbol f�r Energie
-var symbolPotential = "pot";                               // Symbol f�r potentiell
-var symbolKinetic = "kin";                                 // Symbol f�r kinetisch
+var symbolTime = "t";                                      // Символ времени
+var symbolElongation = "s";                                // Символ удлинения
+var symbolVelocity = "v";                                  // Символ скорости
+var symbolAcceleration = "a";                              // Символ ускорения
+var symbolTangential = "tang";                             // Символ касательной
+var symbolForce = "F";                                     // Символ силы
+var symbolEnergy = "E";                                    // Символ энергии
+var symbolPotential = "pot";                               // Символ потенциала
+var symbolKinetic = "kin";                                 // Символ кинетики
 var second = "с";
 var meterUnicode = "м";
 var meterPerSecond = "м/с";
@@ -86,667 +78,673 @@ var newton = "Н";
 var joule = "Дж";
 
 
-// Attribute:
+// Атрибуты:
 
-var canvas, ctx;                                           // Zeichenfl�che, Grafikkontext
-var width, height;                                         // Abmessungen der Zeichenfl�che (Pixel)
-var bu1, bu2;                                              // Schaltkn�pfe (Reset, Start/Pause/Weiter)
-var cbSlow;                                                // Optionsfeld Zeitlupe
-var ipL, ipG, ipM, ipA;                                    // Eingabefelder
-var rbY, rbV, rbA, rbF, rbE;                               // Radiobuttons
-var on;                                                    // Flag f�r Bewegung
-var slow;                                                  // Flag f�r Zeitlupe
-var t0;                                                    // Anfangszeitpunkt
-var t;                                                     // Aktuelle Zeit (s)
-var tU;                                                    // Zeit f�r Diagramm-Ursprung (s)
-var l;                                                     // Pendell�nge (m)
-var lPix;                                                  // Pendell�nge (Pixel)
-var g;                                                     // Fallbeschleunigung (m/s�)
-var m;                                                     // Masse (kg)
-var omega;                                                 // Kreisfrequenz (rad/s)
-var tPer;                                                  // Schwingungsdauer (s)
-var phi;                                                   // Phasenwinkel (Bogenma�)
-var sinPhi, cosPhi;                                        // Trigonometrische Werte
-var alpha0;                                                // Maximaler Auslenkungswinkel (Bogenma�)
-var alpha;                                                 // Momentaner Auslenkungswinkel (Bogenma�)
-var sinAlpha, cosAlpha;                                    // Trigonometrische Werte
-var yPix;                                                  // Umrechnungsfaktor (Pixel pro SI-Einheit)
-var px, py;                                                // Position des Pendelk�rpers (Pixel)
-var nrSize;                                                // Nummer der betrachteten Gr��e
+var canvas, ctx;                                           // Область рисования, графический контекст
+var width, height;                                         // Размеры области рисования (пиксели)
+var bu1, bu2;                                              // Кнопки переключения передач (сброс, запуск/пауза/Продолжение)
+var cbSlow;                                                // Переключатель замедленного воспроизведения
+var ipL, ipG, ipM, ipA;                                    // Поля ввода
+var rbY, rbV, rbA, rbF, rbE;                               // Радиокнопки
+var on;
+var slow;                                                  // Флаг для замедленного воспроизведения 
+var t0;                                                    // Начальное время
+var t;                                                     // Текущее время (ы)
+var tU;                                                    // Время для начала (ов) диаграммы
+var l;                                                     // Длина маятника (м)
+var lPix;                                                  // Длина маятника (пикселей)
+var g;                                                     // Ускорение падения (м / с)
+var m;                                                     // Масса (кг)
+var omega;                                                 // Круговая частота (колесо / с)
+var tPer;                                                  // Продолжительность колебаний (с)
+var phi;                                                   // Фазовый угол (дуговой мао)
+var sinPhi, cosPhi;                                        // Тригонометрические значения
+var alpha0;                                                // Максимальный угол отклонения (Мао дуги)
+var alpha;                                                 // Мгновенный угол отклонения (дуга Мао)
+var sinAlpha, cosAlpha;                                    // Тригонометрические значения
+var yPix;                                                  // Коэффициент преобразования (пиксели на единицу СИ)
+var px, py;                                                // Положение тела маятника (пиксели)
+var nrSize;                                                // Количество рассмотренных грув
 
-// Element der Schaltfl�che (aus HTML-Datei):
-// id ..... ID im HTML-Befehl
-// text ... Text (optional)
+// Элемент таблицы (как HTML-дата):
+// идентификатор ..... Идентификатор HTML-Befehl
+// текст ... Текст (необязательно)
 
 function getElement(id, text) {
-  var e = document.getElementById(id);                     // Element
-  if (text) e.innerHTML = text;                            // Text festlegen, falls definiert
-  return e;                                                // R�ckgabewert
+  var e = document.getElementById(id);                     // Элемент
+  if (text) e.innerHTML = text;                            // Задать текст, если он определен
+  return e;                                                // Заданное значение юбки
 }
 
-// Start:
+// Начать:
 
 function start() {
-  canvas = getElement("cv");                               // Zeichenfl�che
-  width = canvas.width; height = canvas.height;            // Abmessungen (Pixel)
-  ctx = canvas.getContext("2d");                           // Grafikkontext
-  bu1 = getElement("bu1", text01);                          // Resetknopf
-  bu2 = getElement("bu2", text02[0]);                       // Startknopf
-  bu2.state = 0;                                           // Anfangszustand (vor Start der Animation)
-  cbSlow = getElement("cbSlow");                           // Optionsfeld (Zeitlupe)
-  cbSlow.checked = false;                                  // Zeitlupe abgeschaltet
-  getElement("lbSlow", text03);                             // Erk�render Text (Zeitlupe)
-  getElement("ipLa", text04);                               // Erkl�render Text (Pendell�nge)
-  ipL = getElement("ipLb");                                // Eingabefeld (Pendell�nge)
-  getElement("ipLc", meter);                                // Einheit (Pendell�nge)
-  var ipgx = getElement("ipGx");                           // Zus�tzliche Zeile (Fallbeschleunigung)
-  if (ipgx) ipgx.innerHTML = text05x;                      // Erkl�render Text, zus�tzliche Zeile (Fallbeschleunigung)
-  getElement("ipGa", text05);                               // Erkl�render Text (Fallbeschleunigung)
-  ipG = getElement("ipGb");                                // Eingabefeld (Fallbeschleunigung)
-  getElement("ipGc", meterPerSecond2);                      // Einheit (Fallbeschleunigung)
-  getElement("ipMa", text06);                               // Erkl�render Text (Masse)
-  ipM = getElement("ipMb");                                // Eingabefeld (Masse)
-  getElement("ipMc", kilogram);                             // Einheit (Masse)
-  getElement("ipAa", text07);                               // Erkl�render Text (Amplitude)
-  ipA = getElement("ipAb");                                // Eingabefeld (Amplitude)
-  getElement("ipAc", degree);                               // Einheit (Amplitude)
-  rbY = getElement("rbY");                                 // Radiobutton (Elongation)
-  getElement("lbY", text08);                                // Erkl�render Text (Elongation)
-  rbY.checked = true;                                      // Radiobutton ausw�hlen
-  rbV = getElement("rbV");                                 // Radiobutton (Geschwindigkeit)
-  getElement("lbV", text09);                                // Erkl�render Text (Geschwindigkeit)
-  rbA = getElement("rbA");                                 // Radiobutton (Beschleunigung)
-  getElement("lbA", text10);                                // Erkl�render Text (Beschleunigung)
-  rbF = getElement("rbF");                                 // Radiobutton (Kraft)
-  getElement("lbF", text11);                                // Erkl�render Text (Kraft)
-  rbE = getElement("rbE");                                 // Radiobutton (Energie)
-  getElement("lbE", text12);                                // Erkl�render Text (Energie)
+  canvas = getElement("cv");                               // Область рисования
+  width = canvas.width; height = canvas.height;            // Размеры (пиксели)
+  ctx = canvas.getContext("2d");                           // Графический контекст
+  bu1 = getElement("bu1", text01);                         // Кнопка сброса
+  bu2 = getElement("bu2", text02[0]);                      // Кнопка запуска
+  bu2.state = 0;                                           // Начальное состояние (до начала анимации)
+  cbSlow = getElement("cbSlow");                           // Переключатель (замедленное воспроизведение)
+  cbSlow.checked = false;                                  // Замедленное воспроизведение отключено
+  getElement("lbSlow", text03);                            // Озвучивание текста (замедленное воспроизведение)
+  getElement("ipLa", text04);                              // Озвучивание текста (замедленное воспроизведение)
+  ipL = getElement("ipLb");                                // Поле ввода (длина маятника)
+  getElement("ipLc", meter);                               // Единица измерения (длина маятника)
+  var ipgx = getElement("ipGx");                           // Дополнительная строка (ускорение падения)
+  if (ipgx) ipgx.innerHTML = text05x;                      // Пояснительный текст, дополнительная строка (ускорение падежа)
+  getElement("ipGa", text05);                              // Пояснительный текст (ускорение падежа)
+  ipG = getElement("ipGb");                                // Поле ввода (ускорение падения)
+  getElement("ipGc", meterPerSecond2);                     // Единица измерения (ускорение падения)
+  getElement("ipMa", text06);                              // Озвученный текст (объем)
+  ipM = getElement("ipMb");                                // Поле ввода (объем)
+  getElement("ipMc", kilogram);                            // Единица измерения (масса)
+  getElement("ipAa", text07);                              // Озвучивающий текст (амплитуда)
+  ipA = getElement("ipAb");                                // Поле ввода (амплитуда)
+  getElement("ipAc", degree);                              // Единица измерения (амплитуда)
+  rbY = getElement("rbY");                                 // Радиокнопка (удлинение)
+  getElement("lbY", text08);                               // Озвучивающий текст (удлинение)
+  //rbY.checked = true;                                      // Выделить радиокнопку
+  rbV = getElement("rbV");                                 // Радиокнопка (скорость)
+  getElement("lbV", text09);                               // Озвучивание текста (скорость)
+  rbA = getElement("rbA");                                 // Радиокнопка (ускорение)
+  getElement("lbA", text10);                               // Озвучивание текста (ускорение)
+  rbF = getElement("rbF");                                 // Радиокнопка (сила)
+  getElement("lbF", text11);                               // Озвучивание текста (сила)
+  rbE = getElement("rbE");                                 // Радиокнопка (питание)
+  getElement("lbE", text12);                               // Озвучивание текста (питание)
+  rNth = getElement("rNth");
+  getElement("lNth", textNothing);
+  rNth.checked = true;
 
-  l = 5;                                                   // Anfangswert Pendell�nge (m)
-  g = 9.81;                                                // Anfangswert Fallbeschleunigung (m/s�)
-  m = 1;                                                   // Anfangswert Masse (kg)
-  alpha0 = 10 * DEG;                                         // Anfangswert Winkelamplitude (Bogenma�) 
-  updateInput();                                           // Eingabefelder aktualisieren 
-  calculation();                                           // Berechnungen (Seiteneffekt!)
-  focus(ipL);                                              // Fokus f�r erstes Eingabefeld    
-  on = false;                                              // Animation abgeschaltet
-  slow = false;                                            // Zeitlupe abgeschaltet
-  t = 0;                                                   // Aktuelle Zeit (s)
-  t0 = new Date();                                         // Anfangszeitpunkt
-  setInterval(paint, 40);                                   // Timer-Intervall 0,040 s
+  l = 5;                                                   // Начальное значение длины маятника (м)
+  g = 9.81;                                                // Начальное значение ускорения падения (м/со)
+  m = 1;                                                   // Начальное значение массы (кг)
+  alpha0 = 10 * DEG;                                       // Начальное значение угловой амплитуды (дуговое мао)
+  updateInput();                                           // Обновить поля ввода
+  calculation();                                           // Вычисления (эффект страницы!)
+  focus(ipL);                                              // Фокусировка для первого поля ввода
+  on = false;                                              // Анимация отключена
+  slow = false;                                            // Замедленное движение отключено
+  t = 0;                                                   // Текущее время (ы)
+  t0 = new Date();                                         // Начальное время
+  setInterval(paint, 40);                                  // Интервал таймера 0,040 с
 
-  bu1.onclick = reactionReset;                             // Reaktion auf Resetknopf
-  bu2.onclick = reactionStart;                             // Reaktion auf Startknopf
-  cbSlow.onclick = reactionSlow;                           // Reaktion auf Optionsfeld Zeitlupe
-  ipL.onkeydown = reactionEnter;                           // Reaktion auf Enter-Taste (Eingabe Pendell�nge)
-  ipG.onkeydown = reactionEnter;                           // Reaktion auf Enter-Taste (Eingabe Fallbeschleunigung)
-  ipM.onkeydown = reactionEnter;                           // Reaktion auf Enter-Taste (Eingabe Masse)
-  ipA.onkeydown = reactionEnter;                           // Reaktion auf Enter-Taste (Eingabe Amplitude)
-  ipL.onblur = reaction;                                   // Reaktion auf Verlust des Fokus (Eingabe Pendell�nge)
-  ipG.onblur = reaction;                                   // Reaktion auf Verlust des Fokus (Eingabe Fallbeschleunigung)
-  ipM.onblur = reaction;                                   // Reaktion auf Verlust des Fokus (Eingabe Masse)
-  ipA.onblur = reaction;                                   // Reaktion auf Verlust des Fokus (Eingabe Amplitude)
-  rbY.onclick = reactionRadioButton;                       // Reaktion auf Radiobutton Elongation
-  rbV.onclick = reactionRadioButton;                       // Reaktion auf Radiobutton Geschwindigkeit
-  rbA.onclick = reactionRadioButton;                       // Reaktion auf Radiobutton Beschleunigung
-  rbF.onclick = reactionRadioButton;                       // Reaktion auf Radiobutton Kraft
-  rbE.onclick = reactionRadioButton;                       // Reaktion auf Radiobutton Energie
-  nrSize = 0;                                              // Elongation ausgew�hlt  
+  bu1.onclick = reactionReset;                             // Реакция на кнопку сброса
+  bu2.onclick = reactionStart;                             // Реакция на кнопку запуска
+  cbSlow.onclick = reactionSlow;                           // Реакция на переключатель замедленного действия
+  ipL.onkeydown = reactionEnter;                           // Реакция на клавишу Enter (ввод в режиме ожидания)
+  ipG.onkeydown = reactionEnter;                           // Реакция на клавишу Enter (ускорение ввода)
+  ipM.onkeydown = reactionEnter;                           // Реакция на клавишу Enter (ввод массы)
+  ipA.onkeydown = reactionEnter;                           // Реакция на клавишу Enter (амплитуда ввода)
+  ipL.onblur = reaction;                                   // Реакция на потерю фокуса (ввод)
+  ipG.onblur = reaction;                                   // Реакция на потерю фокуса (входное ускорение падения)
+  ipM.onblur = reaction;                                   // Реакция на потерю фокуса (ввод массы)
+  ipA.onblur = reaction;                                   // Реакция на потерю фокуса (входная амплитуда)
+  rNth.onclick = reactionRadioButton;                       // Реакция на ничего радиокнопки
+  rbY.onclick = reactionRadioButton;                       // Реакция на удлинение радиокнопки
+  rbV.onclick = reactionRadioButton;                       // Реакция на скорость радиокнопки
+  rbA.onclick = reactionRadioButton;                       // Реакция на ускорение радиокнопки
+  rbF.onclick = reactionRadioButton;                       // Реакция на силу радиокнопки
+  rbE.onclick = reactionRadioButton;                       // Реакция на энергию радиокнопки
+  nrSize = 5;                                              // Удлинение сбалансировано
 
-} // Ende der Methode start
+} // Конец метода пуск
 
-// Zustandsfestlegung f�r Schaltknopf Start/Pause/Weiter:
+// Настройка состояния для кнопки Пуск/Пауза/Далее:
 
 function setButton2State(st) {
-  bu2.state = st;                                          // Zustand speichern
-  bu2.innerHTML = text02[st];                              // Text aktualisieren
+  bu2.state = st;                                          // Сохранить состояние
+  bu2.innerHTML = text02[st];                              // Обновить текст
 }
 
-// Umschalten des Schaltknopfs Start/Pause/Weiter:
+// Переключение кнопки Пуск/Пауза/Продолжить:
 
 function switchButton2() {
-  var st = bu2.state;                                      // Momentaner Zustand
-  if (st == 0) st = 1;                                     // Falls Ausgangszustand, starten
-  else st = 3 - st;                                          // Wechsel zwischen Animation und Unterbrechung
-  setButton2State(st);                                     // Neuen Zustand speichern, Text �ndern
+  var st = bu2.state;                                      // Текущее состояние
+  if (st == 0) st = 1;                                     // Если начальное состояние, запуск
+  else st = 3 - st;                                          // Переключение между анимацией и прерыванием
+  setButton2State(st);                                     // Сохранить новое состояние, добавить текст /
 }
 
-// Aktivierung bzw. Deaktivierung der Eingabefelder:
-// p ... Flag f�r m�gliche Eingabe
+// Активация или прерывание. Включение поля ввода:
+// с... Флажок для возможного ввода
 
 function enableInput(p) {
-  ipL.readOnly = !p;                                       // Eingabefeld f�r Pendell�nge
-  ipG.readOnly = !p;                                       // Eingabefeld f�r Fallbeschleunigung
-  ipM.readOnly = !p;                                       // Eingabefeld f�r Masse
-  ipA.readOnly = !p;                                       // Eingabefeld f�r Winkelamplitude
+  ipL.readOnly = !p;                                       // Поле ввода для длины маятника
+  ipG.readOnly = !p;                                       // Поле ввода для ускорения падения падения
+  ipM.readOnly = !p;                                       // Поле ввода для массы
+  ipA.readOnly = !p;                                       // Поле ввода для угловой амплитуды
 }
 
-// Reaktion auf Resetknopf:
-// Seiteneffekt t, tU, on, slow
+// Реакция на кнопку сброса:
+// Боковой эффект t, tU, on, slow
 
 function reactionReset() {
-  setButton2State(0);                                      // Zustand des Schaltknopfs Start/Pause/Weiter
-  enableInput(true);                                       // Eingabefelder aktivieren
-  t = tU = 0;                                              // Zeitvariable zur�cksetzen
-  on = false;                                              // Animation abgeschaltet
-  slow = cbSlow.checked;                                   // Flag f�r Zeitlupe
-  reaction();                                              // Eingegebene Werte �bernehmen, rechnen, neu zeichnen
-  focus(ipL);                                              // Fokus f�r erstes Eingabefeld
+  setButton2State(0);                                      // Состояние кнопки Пуск /Пауза/Продолжить
+  enableInput(true);                                       // Включить поля ввода
+  t = tU = 0;                                              // Установить переменную времени
+  on = false;                                              // Анимация отключена
+  slow = cbSlow.checked;                                   // Флаг для замедленного воспроизведения
+  reaction();                                              // Принять введенные значения, выполнить вычисления, перерисовать
+  focus(ipL);                                              // Фокус для первое поле ввода
 }
 
-// Reaktion auf den Schaltknopf Start/Pause/Weiter:
-// Seiteneffekt t, tU, on, slow, l, g, m, alpha0, omega, tPer, lPix, phi, sinPhi, cosPhi, alpha, sinAlpha, cosAlpha, px, py
+// Реакция на кнопку Пуск/Пауза /Далее:
+// Эффект страницы t, tU, on, slow, l, g, m, альфа 0, омега, PPX, фи, синфа, Косфи, альфа, синалфа, косальфа, пиксель, пи
 
 function reactionStart() {
-  if (bu2.state != 1) t0 = new Date();                     // Falls Animation angeschaltet, neuer Anfangszeitpunkt
-  switchButton2();                                         // Zustand des Schaltknopfs �ndern
-  enableInput(false);                                      // Eingabefelder deaktivieren
-  on = (bu2.state == 1);                                   // Flag f�r Animation
-  slow = cbSlow.checked;                                   // Flag f�r Zeitlupe
-  reaction();                                              // Eingegebene Werte �bernehmen, rechnen, neu zeichnen
+  if (bu2.state != 1) t0 = new Date();                     // Если анимация включена, новое начальное время
+  switchButton2();                                         // Состояние переключателя в другом месте
+  enableInput(false);                                      // Отключение полей ввода
+  on = (bu2.state == 1);                                   // Флаг для анимации
+  slow = cbSlow.checked;                                   // Флаг для замедленного воспроизведения
+  reaction();                                              // Принимать введенные значения, вычислять, перерисовывать
 }
 
-// Reaktion auf Optionsfeld Zeitlupe:
-// Seiteneffekt slow
+// Реакция переключателя Замедленное воспроизведение:
+// Эффект замедленной съемки
 
 function reactionSlow() {
-  slow = cbSlow.checked;                                   // Flag setzen
+  slow = cbSlow.checked;                                   // Установить флаг
 }
 
-// Hilfsroutine: Eingabe �bernehmen, rechnen, neu zeichnen
-// Seiteneffekt l, g, m, alpha0, omega, tPer, lPix
+// Вспомогательная процедура: вводить, вычислять, перерисовывать
+// Эффект страницы l, g, m, альфа 0, омега, tPer, lPix
 
 function reaction() {
-  input();                                                 // Eingegebene Werte �bernehmen (eventuell korrigiert)
-  calculation();                                           // Berechnungen
-  paint();                                                 // Neu zeichnen
+  input();                                                 // Принять введенные значения (возможно, исправленные)
+  calculation();                                           // Расчеты
+  paint();                                                 // Перерисовка
 }
 
-// Reaktion auf Tastendruck (nur auf Enter-Taste):
+// Реакция на нажатие клавиши (только на клавишу Enter):
 
 function reactionEnter(e) {
-  var enter = (e.key == "Enter" || e.code == "Enter");     // Flag f�r Enter-Taste
-  if (!enter) return;                                      // Falls andere Taste, abbrechen
-  reaction();                                              // Daten �bernehmen, rechnen, neu zeichnen
+  var enter = (e.key == "Enter" || e.code == "Enter");     // Флаг для клавиши ввода
+  if (!enter) return;                                      // Если другая клавиша, отмена
+  reaction();                                              // Получение данных, вычисление, перерисовка
 }
 
-// Fokus f�r Eingabefeld, Cursor am Ende:
-// ip ... Eingabefeld
+// Фокус для поля ввода, курсор в конце:
+// ис ... Поле ввода
 
 function focus(ip) {
-  ip.focus();                                              // Fokus f�r Eingabefeld
-  var n = ip.value.length;                                 // L�nge der Zeichenkette
-  ip.setSelectionRange(n, n);                               // Cursor setzen
+  ip.focus();                                              // Фокус для поля ввода
+  var n = ip.value.length;                                 // Удлинение строки
+  ip.setSelectionRange(n, n);                               // Установка курсора
 }
 
-// Reaktion auf Radiobutton:
-// Seiteneffekt nrSize
+// Реакция на радиокнопку:
+// Изменение размера страницы
 
 function reactionRadioButton() {
-  if (rbY.checked) nrSize = 0;                             // Entweder Elongation ...
-  else if (rbV.checked) nrSize = 1;                        // ... oder Geschwindigkeit ...
-  else if (rbA.checked) nrSize = 2;                        // ... oder Beschleunigung ...
-  else if (rbF.checked) nrSize = 3;                        // ... oder Kraft ...
-  else nrSize = 4;                                         // ... oder Energie ausw�hlen
+  if (rbY.checked) nrSize = 0;                             // Либо удлинение ...
+  else if (rbV.checked) nrSize = 1;                        // ... или скорость ...
+  else if (rbA.checked) nrSize = 2;                        // ... или ускорение ...
+  else if (rbF.checked) nrSize = 3;                        // ... или сила ...
+  else if (rNth.checked) nrSize = 5;                        // ... или ничего ...
+  else nrSize = 4;                                         // ... или выделять энергию
 }
 
 //-------------------------------------------------------------------------------------------------
 
-// Berechnungen:
-// Seiteneffekt omega, tPer, lPix
+// Расчеты:
+// Побочный эффект омега, tPer, lPix
 
 function calculation() {
-  omega = Math.sqrt(g / l);                                  // Kreisfrequenz (rad/s)
-  tPer = 2 * Math.PI / omega;                                  // Schwingungsdauer (s)
-  lPix = 25 * l;                                             // Pendell�nge (Pixel)
+  omega = Math.sqrt(g / l);                                  // Круговая частота (рад/с)
+  tPer = 2 * Math.PI / omega;                                  // Продолжительность колебаний (с)
+  lPix = 25 * l;                                             // Длина маятника (пиксель)
 }
 
-// Umwandlung einer Zahl in eine Zeichenkette:
-// n ..... Gegebene Zahl
-// d ..... Zahl der Stellen
-// fix ... Flag f�r Nachkommastellen (im Gegensatz zu g�ltigen Ziffern)
+// Преобразование числа в строку:
+// n ..... Заданное число
+// d ..... количество цифр
+// fix ... Flag для знаков после запятой (в отличие от золотых цифр)
 
 function ToString(n, d, fix) {
-  var s = (fix ? n.toFixed(d) : n.toPrecision(d));         // Zeichenkette mit Dezimalpunkt
-  return s.replace(".", decimalSeparator);                  // Eventuell Punkt durch Komma ersetzen
+  var s = (fix ? n.toFixed(d) : n.toPrecision(d));         // Строка с десятичной
+  return s.replace(".", decimalSeparator); точкой // Возможно заменить точку запятой
 }
 
-// Eingabe einer Zahl
-// ef .... Eingabefeld
-// d ..... Zahl der Stellen
-// fix ... Flag f�r Nachkommastellen (im Gegensatz zu g�ltigen Ziffern)
-// min ... Minimum des erlaubten Bereichs
-// max ... Maximum des erlaubten Bereichs
-// R�ckgabewert: Zahl oder NaN
+// Ввод числа
+// ef .... Поле ввода
+// d ..... количество цифр
+// fix ... Flag для знаков после запятой (в отличие от золотых цифр)
+// минимум ... минимум разрешенного диапазона
+// максимум ... Максимум разрешенного диапазона
+// Заданное значение: число или NaN
 
 function inputNumber(ef, d, fix, min, max) {
-  var s = ef.value;                                        // Zeichenkette im Eingabefeld
-  s = s.replace(",", ".");                                  // Eventuell Komma in Punkt umwandeln
-  var n = Number(s);                                       // Umwandlung in Zahl, falls m�glich
-  if (isNaN(n)) n = 0;                                     // Sinnlose Eingaben als 0 interpretieren 
-  if (n < min) n = min;                                    // Falls Zahl zu klein, korrigieren
-  if (n > max) n = max;                                    // Falls Zahl zu gro�, korrigieren
-  ef.value = ToString(n, d, fix);                            // Eingabefeld eventuell korrigieren
-  return n;                                                // R�ckgabewert
+  var s = ef.value;                                        // Строка в поле ввода
+  s = s.replace(",", ".");                                  // Возможно преобразовать запятую в точку
+  var n = Number(s);                                       // преобразование в число, если возможно
+  if (isNaN(n)) n = 0;                                     // Интерпретировать бессмысленный ввод как 0
+  if (n < min) n = min;                                    // Если число слишком мало, исправьте // Если число слишком мало, измените // Если нет, измените значение на NaN // Если нет, измените значение на NaN // Если нет, измените значение на NaN // Если нет // Если нет // Если нет // Если нет // Если нет // Если нет // Если нет // Если нет // Если нет // Если число слишком мало, исправьте
+  if (n > max) n = max;                                    // Если Число в groo, исправить
+  ef.value = ToString(n, d, fix);                            // Поле ввода может быть исправлено
+  return n;                                                // Заданное значение объекта
 }
 
-// Gesamte Eingabe:
-// Seiteneffekt l, g, m, alpha0
+// Весь ввод:
+// Боковой эффект l, g, m, alpha0
 
 function input() {
-  var ae = document.activeElement;                         // Aktives Element
-  l = inputNumber(ipL, 3, true, 0.5, 10);                      // Pendell�nge (m)
-  g = inputNumber(ipG, 2, true, 1, 100);                       // Fallbeschleunigung (m/s�)
-  m = inputNumber(ipM, 3, true, 1, 10);                        // Masse (kg)
-  alpha0 = DEG * inputNumber(ipA, 1, true, 2, 20);               // Winkelamplitude (Bogenma�)
-  if (ae == ipL) focus(ipG);                               // Fokus f�r n�chstes Eingabefeld
-  if (ae == ipG) focus(ipM);                               // Fokus f�r n�chstes Eingabefeld
-  if (ae == ipM) focus(ipA);                               // Fokus f�r n�chstes Eingabefeld
-  if (ae == ipA) ipA.blur();                               // Fokus abgegeben
+  var ae = document.activeElement;                         // Активный элемент
+  l = inputNumber(ipL, 3, true, 0.5, 10);                      // Длина подвески (m)
+  g = inputNumber(ipG, 2, true, 1, 100);                       // Ускорение падения (м/со)
+  m = inputNumber(ipM, 3, true, 1, 10);                        // Масса (кг)
+  alpha0 = DEG * inputNumber(ipA, 1, true, 2, 20);               // Угловая амплитуда (мао дуги)
+  if (ae == ipL) focus(ipG);                               // Фокус для последнего поля ввода
+  if (ae == ipG) focus(ipM);                               // Фокус для последнего поля ввода
+  if (ae == ipM) focus(ipA);                               // Фокус для последнего поля ввода
+  if (ae == ipA) ipA.blur();                               // Фокус передан
 }
 
-// Aktualisierung der Eingabefelder:
+// Обновление полей ввода:
 
 function updateInput() {
-  ipL.value = ToString(l, 3, true);                          // Eingabefeld f�r Pendell�nge (m)
-  ipG.value = ToString(g, 2, true);                          // Eingabefeld f�r Fallbeschleunigung (m/s�)
-  ipM.value = ToString(m, 3, true);                          // Eingabefeld f�r Masse (kg)
-  ipA.value = ToString(alpha0 / DEG, 1, true);                 // Eingabefeld f�r Winkelamplitude (�)
+  ipL.value = ToString(l, 3, true);                          // Поле ввода для Pendellonge (m)
+  ipG.value = ToString(g, 2, true);                          // Поле ввода для ускорения падения (м/со)
+  ipM.value = ToString(m, 3, true);                          // Поле ввода для массы (кг)
+  ipA.value = ToString(alpha0 / DEG, 1, true);                 // Поле ввода для угловой амплитуды (о)
 }
 
 //-------------------------------------------------------------------------------------------------
 
-// Neuer Pfad mit Standardwerten:
+// Новый контур со значениями по умолчанию:
 
 function newPath() {
-  ctx.beginPath();                                         // Neuer Pfad
-  ctx.strokeStyle = "#000000";                             // Linienfarbe schwarz
-  ctx.lineWidth = 1;                                       // Liniendicke 1
+  ctx.beginPath();                                         // Новый контур
+  ctx.strokeStyle = "#000000";                             // Цвет линии черный
+  ctx.lineWidth = 1;                                       // Толщина линии 1
 }
 
-// Rechteck mit schwarzem Rand:
-// (x,y) ... Koordinaten der Ecke links oben (Pixel)
-// w ....... Breite (Pixel)
-// h ....... H�he (Pixel)
-// c ....... F�llfarbe (optional)
+// Прямоугольник с черной рамкой:
+// (x,y) ... Координаты верхнего левого угла (пиксели)
+// вт ....... ширина (пиксели)
+// час ....... Высота (пиксели)
+// c ....... Цвет подписки (необязательно)
 
 function rectangle(x, y, w, h, c) {
-  if (c) ctx.fillStyle = c;                                // F�llfarbe
-  newPath();                                               // Neuer Pfad
-  ctx.fillRect(x, y, w, h);                                   // Rechteck ausf�llen
-  ctx.strokeRect(x, y, w, h);                                 // Rand zeichnen
+  if (c) ctx.fillStyle = c;                                // Следующий цвет
+  newPath();                                               // Новый контур
+  ctx.fillRect(x, y, w, h);                                   // Развернуть прямоугольник
+  ctx.strokeRect(x, y, w, h);                                 // Нарисовать границу
 }
 
-// Kreisscheibe mit schwarzem Rand:
-// (x,y) ... Mittelpunktskoordinaten (Pixel)
-// r ....... Radius (Pixel)
-// c ....... F�llfarbe (optional)
+// Круг с черной границей:
+// (x, y) ... Координаты центральной точки (пиксели)
+// r ....... радиус (пиксель)
+// c ....... Цвет подписки (необязательно)
 
 function circle(x, y, r, c) {
-  if (c) ctx.fillStyle = c;                                // F�llfarbe
-  newPath();                                               // Neuer Pfad
-  ctx.arc(x, y, r, 0, 2 * Math.PI, true);                         // Kreis vorbereiten
-  ctx.fill();                                              // Kreis ausf�llen
-  ctx.stroke();                                            // Rand zeichnen
+  if (c) ctx.fillStyle = c;                                // Цвет перехода
+  newPath();                                                // Новый контур
+  ctx.arc(x, y, r, 0, 2 * Math.PI, true);                         // Подготовить круг
+  ctx.fill();                                              // Развернуть круг
+  ctx.stroke();                                            // Нарисовать границу
 }
 
-// Pendel zeichnen:
-// Seiteneffekt alpha, sinAlpha, cosAlpha, px, py
+// Нарисовать маятник:
+// Боковой эффект альфа, синалфа, косалфа, пиксель, пи
 
 function pendulum() {
-  alpha = alpha0 * cosPhi;                                   // Auslenkung (Bogenma�)                      
-  sinAlpha = Math.sin(alpha);                              // Sinuswert 
-  cosAlpha = Math.cos(alpha);                              // Cosinuswert
-  px = ax + lPix * sinAlpha;                                   // x-Koordinate des Pendelk�rpers (Pixel)
-  py = ay + lPix * cosAlpha;                                   // y-Koordinate des Pendelk�rpers (Pixel)
-  newPath();                                               // Neuer Pfad mit Standardwerten
-  ctx.moveTo(ax, ay);                                       // Anfangspunkt (Aufh�ngung)
-  ctx.lineTo(px, py);                                       // Weiter zum Mittelpunkt des Pendelk�rpers
-  ctx.closePath();                                         // Pfad schlie�en
-  ctx.stroke();                                            // Linie f�r Schnur zeichnen
-  circle(px, py, 5, colorBody);                               // Pendelk�rper
+  alpha = alpha0 * cosPhi;                                   // Отклонение (дуга мао)
+  sinAlpha = Math.sin(alpha);                              // Значение синуса
+  cosAlpha = Math.cos(alpha);                              // Значение косинуса
+  px = ax + lPix * sinAlpha;                                   // x-координата маятника (пиксель)
+  py = ay + lPix * cosAlpha;                                   // y-координата тела маятника (пиксели)
+  newPath();                                               // Новый путь со значениями по умолчанию
+  ctx.moveTo(ax, ay);                                       // Начальная точка (зависание)
+  ctx.lineTo(px, py);                                       // Переход к центральной точке корпуса маятника
+  ctx.closePath();                                          // Проложите путь
+  ctx.stroke();                                            // Нарисуйте линию для шнура
+  circle(px, py, 5, '#000000');                               // Корпус маятника
 }
 
-// Digitaluhr zeichnen:
+// Нарисуйте цифровые часы:
 
 function clock(x, y) {
-  rectangle(x - 60, y - 16, 120, 32, colorClock1);                 // Geh�use
-  rectangle(x - 50, y - 10, 100, 20, colorClock2);                 // Hintergrund der Anzeige
-  ctx.fillStyle = "#ff0000";                               // Farbe f�r Ziffern
-  ctx.font = "normal normal bold 16px monospace";          // Zeichensatz
-  ctx.textAlign = "center";                                // Zentrierte Ausgabe
-  var n = Math.floor(t / 1000);                              // Zahl der Zeitabschnitte zu je 1000 s
-  var s = (t - n * 1000).toFixed(3) + " " + second;                // Zeitangabe (Einheit s, alle 1000 s Neuanfang)
-  s = s.replace(".", decimalSeparator);                     // Eventuell Punkt durch Komma ersetzen
-  while (s.length < 9) s = " " + s;                          // Eventuell Leerzeichen am Anfang erg�nzen
-  ctx.fillText(s, x, y + 5);                                   // Ausgabe der Zeit
+  rectangle(x - 60, y - 16, 120, 32, colorClock1);                 // Корпус
+  rectangle(x - 50, y - 10, 100, 20, colorClock2);                 // Фон дисплея
+  ctx.fillStyle = "#ff0000";                               // Цвет для цифр
+  ctx.font = "normal normal bold 16px monospace";          // Набор символов
+  ctx.textAlign = "center";                                // Вывод по центру
+  var n = Math.floor(t / 1000);                              // Количество временных отрезков по 1000 с
+  var s = (t - n * 1000).toFixed(3) + " " + second;         // Указание времени (единица с, начало каждые 1000 с)
+  s = s.replace(".", decimalSeparator);                     // Возможно, заменить точку запятой
+  while (s.length < 9) s = " " + s;                          // Заменить пробел в начале, возможно
+  ctx.fillText(s, x, y + 5);                                   // Вывести время
 }
 
-// Pfeil zeichnen:
-// x1, y1 ... Anfangspunkt
-// x2, y2 ... Endpunkt
-// w ........ Liniendicke (optional)
-// Zu beachten: Die Farbe wird durch ctx.strokeStyle bestimmt.
+// Нарисовать стрелку:
+// x1, y1 ... начальная точка
+// x2, y2 ... конечная точка
+// вт ....... Толщина линии (необязательно)
+// Обратите внимание: цвет определяется ctx.strokeStyle.
 
 function arrow(x1, y1, x2, y2, w) {
-  if (!w) w = 1;                                           // Falls Liniendicke nicht definiert, Defaultwert                          
-  var dx = x2 - x1, dy = y2 - y1;                              // Vektorkoordinaten
-  var length = Math.sqrt(dx * dx + dy * dy);                     // L�nge
-  if (length == 0) return;                                 // Abbruch, falls L�nge 0
-  dx /= length; dy /= length;                              // Einheitsvektor
-  var s = 2.5 * w + 7.5;                                       // L�nge der Pfeilspitze 
-  var xSp = x2 - s * dx, ySp = y2 - s * dy;                        // Hilfspunkt f�r Pfeilspitze         
-  var h = 0.5 * w + 3.5;                                       // Halbe Breite der Pfeilspitze
-  var xSp1 = xSp - h * dy, ySp1 = ySp + h * dx;                    // Ecke der Pfeilspitze
-  var xSp2 = xSp + h * dy, ySp2 = ySp - h * dx;                    // Ecke der Pfeilspitze
-  xSp = x2 - 0.6 * s * dx; ySp = y2 - 0.6 * s * dy;                    // Einspringende Ecke der Pfeilspitze
-  ctx.beginPath();                                         // Neuer Pfad
-  ctx.lineWidth = w;                                       // Liniendicke
-  ctx.moveTo(x1, y1);                                       // Anfangspunkt
-  if (length < 5) ctx.lineTo(x2, y2);                       // Falls kurzer Pfeil, weiter zum Endpunkt, ...
-  else ctx.lineTo(xSp, ySp);                                // ... sonst weiter zur einspringenden Ecke
-  ctx.stroke();                                            // Linie zeichnen
-  if (length < 5) return;                                  // Falls kurzer Pfeil, keine Spitze
-  ctx.beginPath();                                         // Neuer Pfad f�r Pfeilspitze
-  ctx.fillStyle = ctx.strokeStyle;                         // F�llfarbe wie Linienfarbe
-  ctx.moveTo(xSp, ySp);                                     // Anfangspunkt (einspringende Ecke)
-  ctx.lineTo(xSp1, ySp1);                                   // Weiter zum Punkt auf einer Seite
-  ctx.lineTo(x2, y2);                                       // Weiter zur Spitze
-  ctx.lineTo(xSp2, ySp2);                                   // Weiter zum Punkt auf der anderen Seite
-  ctx.closePath();                                         // Zur�ck zum Anfangspunkt
-  ctx.fill();                                              // Pfeilspitze zeichnen 
+  if (!w) w = 1;                                           // Если толщина линии не определена, значение по умолчанию
+  var dx = x2 - x1, dy = y2 - y1;                          // Векторные координаты
+  var length = Math.sqrt(dx * dx + dy * dy);                     // Выпад
+  if (length == 0) return;                                 // Отмена, если выпад 0
+  dx /= length; dy /= length;                              // Единичный вектор
+  var s = 2.5 * w + 7.5;                                       // Выпад наконечника стрелы 
+  var xSp = x2 - s * dx, ySp = y2 - s * dy;                        // Вспомогательная точка для наконечника стрелы
+  var h = 0.5 * w + 3.5;                                    // Половина ширины наконечника стрелы
+  var xSp1 = xSp - h * dy, ySp1 = ySp + h * dx;                    // Угол наконечника стрелы
+  var xSp2 = xSp + h * dy, ySp2 = ySp - h * dx;                    // Угол наконечника стрелы
+  xSp = x2 - 0.6 * s * dx; ySp = y2 - 0.6 * s * dy;                    // Переходящий угол стрелки
+  ctx.beginPath();                                         // Новый путь
+  ctx.lineWidth = w;                                       // Толщина линии
+  ctx.moveTo(x1, y1);                                       // Начальная точка
+  if (length < 5) ctx.lineTo(x2, y2);                       // Если стрелка короткая, продолжайте движение к конечной точке, ...
+  else ctx.lineTo(xSp, ySp);                                // ... в противном случае перейдите к переходному углу
+  ctx.stroke();                                            // Нарисуйте линию
+  if (length < 5) return;                                  // Если стрелка короткая, наконечника нет
+  ctx.beginPath();                                         // Новый путь для точки со стрелкой
+  ctx.fillStyle = ctx.strokeStyle;                         // Следующий цвет, как цвет линии
+  ctx.moveTo(xSp, ySp);                                    // Начальная точка (переходящий угол)
+  ctx.lineTo(xSp1, ySp1);                                  // Переход к точке с одной стороны
+  ctx.lineTo(x2, y2);                                      // Переход к точке с другой стороны
+  ctx.lineTo(xSp2, ySp2);                                   // Переход к точке с другой стороны
+  ctx.closePath();                                         // Переход к начальной точке
+  ctx.fill();                                               // Рисование точки со стрелкой
 }
 
-// Vektorpfeil vom Pendelk�rper aus:
-// r ..... L�nge des Pfeils
-// phi ... Winkel gegen�ber der Waagrechten (Bogenma�, Gegenuhrzeigersinn)
+// Векторная стрелка от корпуса маятника:
+// р ..... Выпад стрелы
+// фи ... Угол, противоположный горизонтали (дуга Мао, против часовой стрелки)
 
 function arrowPendulum(r, phi) {
-  var x = px + r * Math.cos(phi);                              // x-Koordinate der Pfeilspitze
-  var y = py - r * Math.sin(phi);                              // y-Koordinate der Pfeilspitze 
-  arrow(px, py, x, y, 3);                                      // Pfeil zeichnen
+  var x = px + r * Math.cos(phi);                              // x-координата стрелки
+  var y = py - r * Math.sin(phi);                              // y-координата стрелки
+  arrow(px, py, x, y, 3);                                      // нарисовать стрелку
 }
 
-// Text ausrichten (Zeichensatz FONT1):
-// s ....... Zeichenkette
-// t ....... Typ (0 f�r linksb�ndig, 1 f�r zentriert, 2 f�r rechtsb�ndig)
-// (x,y) ... Position (Pixel)
+// выровнять текст (набор символов FONT1):
+// s ...... строка
+// t ...... тип (0 для левого угла, 1 для центрированного, 2 для правого угла)
+// (x, y) ... Положение (пиксель)
 
 function alignText(s, t, x, y) {
-  ctx.font = FONT1;                                        // Zeichensatz
-  if (t == 0) ctx.textAlign = "left";                      // Je nach Wert von t linksb�ndig ...
-  else if (t == 1) ctx.textAlign = "center";               // ... oder zentriert ...
-  else ctx.textAlign = "right";                            // ... oder rechtsb�ndig
-  ctx.fillText(s, x, y);                                     // Text ausgeben
+  ctx.font = FONT1;                                        // Набор символов
+  if (t == 0) ctx.textAlign = "left";                      // слева направо в зависимости от значения t ...
+  else if (t == 1) ctx.textAlign = "center";               // ... или центрированный ...
+  else ctx.textAlign = "right";                            // ... или в верхнем правом углу
+  ctx.fillText(s, x, y);                                     // вывод текста
 }
 
-// Waagrechte Achse (mit Beschriftung und Ticks) f�r Diagramm:
-// (x,y) ... Ursprung (Pixel)
+// Горизонтальная ось (с метками и тиками) для диаграммы:
+// (x,y) ... Начало координат (пиксели)
 
 function horizontalAxis(x, y) {
-  ctx.strokeStyle = "#000000";                             // Linienfarbe schwarz 
-  arrow(x - 20, y, x + 240, y);                                   // Pfeil zeichnen
-  alignText(symbolTime, 1, x + 230, y + 15);                      // Beschriftung (t)
-  alignText(text21, 1, x + 230, y + 27);                          // Beschriftung (in s)  
-  var t0 = Math.ceil(tU);                                  // Zeit (s) f�r ersten Tick
-  var x0 = Math.round(x + tPix * (t0 - tU));                     // x-Koordinate des ersten Ticks             
-  for (i = 0; i <= 10; i++) {                                  // F�r alle Ticks ...
-    var xs = x0 + i * tPix;                                    // x-Koordinate berechnen
-    ctx.moveTo(xs, y - 3); ctx.lineTo(xs, y + 3);                // Tick vorbereiten
-    if (xs >= x + 5 && xs <= x + 215                           // Falls Tick nicht zu weit links oder zu weit rechts ... 
-      && (t0 + i <= 100 || (t0 + i) % 2 == 0))                     // und Zeit (s) kleiner als 100 oder geradzahlig ...
-      alignText("" + (t0 + i), 1, xs, y + 13);                      // ... Tick beschriften
+  ctx.strokeStyle = "#000000";                             // Цвет линии черный
+  arrow(x - 20, y, x + 240, y);                                   // Нарисовать стрелку
+  alignText(symbolTime, 1, x + 230, y + 15);                      // Надпись (т)
+  alignText(text21, 1, x + 230, y + 27);                          // Метка (в единицах)
+  var t0 = Math.ceil(tU);                                  // Время (ы) для первого тика
+  var x0 = Math.round(x + tPix * (t0 - tU));                    // x-координата первого тика
+  for (i = 0; i <= 10; i++) {                                  // Для всех тиков ...
+    var xs = x0 + i * tPix;                                    // Вычислить координату x
+    ctx.moveTo(xs, y - 3); ctx.lineTo(xs, y + 3);                // Подготовить тик
+    if (xs >= x + 5 && xs <= x + 215                           // Если тик не слишком далеко влево или не слишком далеко вправо ...
+      && (t0 + i <= 100 || (t0 + i) % 2 == 0))                     // и время (ы) меньше 100 или четное число ...
+      alignText("" + (t0 + i), 1, xs, y + 13);                      // ... Пометить тик
   }
-  ctx.stroke();                                            // Ticks zeichnen
+  ctx.stroke();                                            // Нарисовать тики
 }
 
-// Senkrechte Achse (mit Beschriftung und Ticks) f�r Diagramm:
-// (x,y) ... Ursprung (Pixel)
-// yLow .... Unteres Ende der Achse (Pixel)
-// yHigh ... Oberes Ende der Achse (Pixel)
-// maxSI ... Maximalwert (SI-Einheit)
-// Seiteneffekt yPix
+// Вертикальная ось (с меткой и тиками) для диаграммы:
+// (x,y) ... Начало координат (пиксели)
+// yLow .... Нижний конец оси (пиксели)
+// ИГХ ... Верхний конец оси (пиксели)
+// maxSI ... Максимальное значение (единица СИ)
+// Боковой эффект yPix
 
 function verticalAxis(x, y, yLow, yHigh, maxSI) {
-  var pot10 = Math.pow(10, Math.floor(Math.log(maxSI) / Math.LN10));    // N�chstkleinere Zehnerpotenz zu maxSI
-  var q = maxSI / pot10;                                     // Verh�ltnis (zwischen 1 und 10)
-  var n;                                                   // Zahl der Ticks
-  if (q > 5) n = 10; else if (q > 2) n = 5; else n = 2;    // "Glatter" Wert f�r Zahl der Ticks 
-  ctx.strokeStyle = "#000000";                             // Linienfarbe schwarz
-  arrow(x, yLow, x, yHigh);                                   // Pfeil zeichnen
-  var n0 = (nrSize < 4 ? -n : 0);                            // Nummer des untersten Ticks 
-  ctx.beginPath();                                         // Neuer Pfad                       
-  for (i = n0; i <= n; i++) {                                  // F�r alle Ticks ...
-    var ys = y - i * 100 / n;                                    // y-Koordinate des Ticks
-    ctx.moveTo(x - 3, ys); ctx.lineTo(x + 3, ys);                // Tick vorbereiten
-    var s = Number(i * pot10).toPrecision(1);                // Zeichenkette f�r Beschriftung 
-    if (Math.abs(i * pot10) >= 10)                           // Falls n�tig ...
-      s = "" + Math.round(i * pot10);                          // ... Zehnerpotenzschreibweise verhindern
-    s = s.replace(".", decimalSeparator);                   // Eventuell Punkt in Komma verwandeln
-    if ((n < 10 || i % 2 == 0) && i != 0)                    // Falls sinnvoll ... 
-      alignText(s, 2, x - 3, ys + 4);                             // ... Tick beschriften
+  var pot10 = Math.pow(10, Math.floor(Math.log(maxSI) / Math.LN10));    // Еще меньше степени десяти до maxSI
+  var q = maxSI / pot10;                                     // Удержание (от 1 до 10)
+  var n;                                                   // Количество тиков
+  if (q > 5) n = 10; else if (q > 2) n = 5; else n = 2;    // "Плавное" значение для количества тиков
+  ctx.strokeStyle = "#000000";                             // Цвет линии черный
+  arrow(x, yLow, x, yHigh);                                   // Нарисовать стрелку
+  var n0 = (nrSize < 4 ? -n : 0);                            // Номер самого нижнего тика
+  ctx.beginPath();                                         // Новый путь
+  for (i = n0; i <= n; i++) {                                  // Для всех тиков ...
+    var ys = y - i * 100 / n;                                    // y-координата тика
+    ctx.moveTo(x - 3, ys); ctx.lineTo(x + 3, ys);                // Подготовить тик
+    var s = Number(i * pot10).toPrecision(1);                // строка для метки
+    if (Math.abs(i * pot10) >= 10)                           // Если необходимо ...
+      s = "" + Math.round(i * pot10);                          // ... Не допускать написания в степени десяти
+    s = s.replace(".", decimalSeparator);                    // Возможно, превратить точку в запятую
+    if ((n < 10 || i % 2 == 0) && i != 0)                    // Если это имеет смысл ... 
+      alignText(s, 2, x - 3, ys + 4);                             // ... Обозначить тик
   }
-  ctx.stroke();                                            // Ticks zeichnen
-  yPix = 100 / n / pot10;                                      // Umrechnungsfaktor aktualisieren
+  ctx.stroke();                                            // Нарисовать тики
+  yPix = 100 / n / pot10;                                      // Обновить коэффициент пересчета
 }
 
-// Sinuskurve (N�herung durch Polygonzug):
-// (x,y) ... Nullpunkt (Pixel)
-// per ..... Periode (Pixel)
-// ampl .... Amplitude (Pixel)
-// xMin .... Minimaler x-Wert (Pixel)
-// xMax .... Maximaler x-Wert (Pixel)
+// Синусоидальная кривая (увеличение с помощью многоугольника):
+// (x,y) ... Нулевая точка (пиксель)
+// за ..... период (пиксели)
+// амплитуда .... Амплитуда (пиксель)
+// xMin .... Минимальное значение x (пикселей)
+// xMax .... Максимальное значение x (пикселей)
 
 function sinus(x, y, per, ampl, xMin, xMax) {
-  var omega = 2 * Math.PI / per;                               // Hilfsgr��e
-  newPath();                                               // Neuer Pfad (Standardwerte)
-  var xx = xMin;                                           // x-Koordinate f�r linken Rand
-  ctx.moveTo(xx, y - ampl * Math.sin(omega * (xx - x)));            // Anfangspunkt 
-  while (xx < xMax) {                                      // Solange rechter Rand noch nicht erreicht ...
-    xx++;                                                  // x-Koordinate erh�hen
-    ctx.lineTo(xx, y - ampl * Math.sin(omega * (xx - x)));          // Neue Teilstrecke vorbereiten
+  var omega = 2 * Math.PI / per;                               // Вспомогательная канавка
+  newPath();                                                // Новый путь (значения по умолчанию)
+  var xx = xMin;                                           // x-координата для левого края
+  ctx.moveTo(xx, y - ampl * Math.sin(omega * (xx - x)));            // Начальная точка
+  while (xx < xMax) {                                       // Пока правый край еще не достигнут ...
+    xx++;                                                  // увеличить координату x
+    ctx.lineTo(xx, y - ampl * Math.sin(omega * (xx - x)));          // Подготовить новый участок
   }
-  ctx.stroke();                                            // Polygonzug f�r Kurve zeichnen
+  ctx.stroke();                                            // Нарисовать многоугольник для кривой
 }
 
-// Diagramm zeichnen:
+// Нарисовать диаграмму:
 
 function diagram(type, x, y, yMax) {
-  horizontalAxis(x, y);                                     // Waagrechte Achse mit Beschriftung und Ticks
-  verticalAxis(x, y, y + 120, y - 135, yMax);                      // Senkrechte Achse mit Beschriftung und Ticks   
-  sinus(x - type * tPer * 5 - tU * tPix, y, tPer * tPix, yMax * yPix, x, x + 200);   // Sinuskurve  
+  horizontalAxis(x, y);                                     // Горизонтальная ось с надписью и галочками
+  verticalAxis(x, y, y + 120, y - 135, yMax);                      // Вертикальная ось с надписью и галочками
+  sinus(x - type * tPer * 5 - tU * tPix, y, tPer * tPix, yMax * yPix, x, x + 200);   // Синусоидальная кривая  
 }
 
-// Markierung in Diagramm f�r momentanen Wert:
-// val .... Zahlenwert (SI-Einheit)
-// x, y ... Ursprung
-// c ...... Farbe
+// Отметка на графике для мгновенного значения:
+// val .... Числовое значение (единица СИ)
+// x, y ... Начало координат
+// c ...... Цвет
 
 function drawMomVal(val, x, y, c) {
-  x += (t - tU) * tPix; y -= val * yPix;                         // Mittelpunktskoordinaten (Pixel)
-  circle(x, y, 2, c);                                         // Kleiner Kreis mit Rand
+  x += (t - tU) * tPix; y -= val * yPix;                         // Координаты центральной точки (пиксели)
+  circle(x, y, 2, c);                                         // Маленький кружок с ободком
 }
 
-// Ausgabe eines Zahlenwerts:
-// s ........ Bezeichnung der Gr��e
-// v ........ Zahlenwert
-// u ........ Einheit
-// n ........ Zahl der g�ltigen Ziffern
-// (x1,y) ... Position des Texts (Pixel)
-// (x2,y) ... Position des Zahlenwerts (Pixel)
+// Вывод числового значения:
+// s ....... Обозначение Grooe
+// v ....... Числовое значение
+// u ........ Единица измерения
+// n ........ Количество золотых цифр
+// (x1,y) ... Положение текста (пиксели)
+// (x2,y) ... Положение числового значения (пикселей)
 
 function writeValue(s, v, u, n, x1, x2, y) {
-  alignText(s + ":", 0, x1, y);                                 // Bezeichnung der Gr��e
-  s = v.toPrecision(n);                                    // Runden mit gew�nschter Genauigkeit
-  s = s.replace(".", decimalSeparator);                     // Eventuell Komma statt Punkt
-  alignText(s + " " + u, 0, x2, y);                               // Zahl mit Einheit
+  alignText(s + ":", 0, x1, y);                                 // Обозначение углубления
+  s = v.toPrecision(n);                                    // Округление с требуемой точностью
+  s = s.replace(".", decimalSeparator);                     // Может быть запятая вместо точки
+  alignText(s + " " + u, 0, x2, y);                               // Число с единицей измерения
 }
 
-// Zentrierter Text mit Index:
-// s1 ...... Normaler Text
-// s2 ...... Index
-// (x,y) ... Position
+// Центрированный текст с индексом:
+// s1 ...... Обычный текст
+// s2 ..... индекс
+// (x,y) ... позиция
 
 function centerTextIndex(s1, s2, x, y) {
-  var w1 = ctx.measureText(s1).width;                      // Breite von s1 (Pixel) 
-  var w2 = ctx.measureText(s2).width;                      // Breite von s2 (Pixel)
-  var x0 = x - (w1 + w2) / 2;                                    // x-Koordinate der Mitte
-  alignText(s1, 0, x0, y);                                    // Normalen Text ausgeben
-  alignText(s2, 0, x0 + w1 + 1, y + 5);                             // Index ausgeben
+  var w1 = ctx.measureText(s1).width;                      // Ширина s1 (пикселей)
+  var w2 = ctx.measureText(s2).width;                      // Ширина s2 (пикселей)
+  var x0 = x - (w1 + w2) / 2;                                    // x-Координата центра
+  alignText(s1, 0, x0, y);                                    // Вывод обычного текста
+  alignText(s2, 0, x0 + w1 + 1, y + 5);                             // Вывод индекса
 }
 
-// Zeichnung zur Elongation:
-// Diagramm f�r Zeitabh�ngigkeit der Elongation, Kreisbogen f�r Elongation, Zahlenwerte
+// Чертеж удлинения:
+// Диаграмма временной зависимости удлинения, дуга окружности для удлинения, Числовые значения
 
 function drawElongation() {
-  var sMax = l * alpha0;                                     // Maximaler Betrag der Elongation (m)
-  var s = sMax * cosPhi;                                     // Momentaner Wert der Elongation (m) 
-  diagram(1, xD, yD1, sMax);                                  // Diagramm zeichnen
-  alignText(symbolElongation, 1, xD - 25, yD1 - 130);             // Beschriftung (Symbol f�r Elongation)
-  alignText(text22, 1, xD - 25, yD1 - 118);                       // Beschriftung (Einheit m)
-  ctx.beginPath();                                         // Neuer Pfad
-  ctx.lineWidth = 3;                                       // Liniendicke
-  ctx.strokeStyle = colorElongation;                       // Farbe f�r Kreisbogen
-  var pos = (alpha >= 0);                                  // Flag f�r Auslenkung nach rechts
-  var w0 = (pos ? Math.PI / 2 : Math.PI / 2 - alpha);            // Startwinkel f�r Kreisbogen (Bogenma�)
-  var w1 = (pos ? Math.PI / 2 - alpha : Math.PI / 2);            // Endwinkel f�r Kreisbogen (Bogenma�)
-  ctx.arc(ax, ay, lPix, w0, w1, true);                          // Kreisbogen vorbereiten
-  ctx.stroke();                                            // Kreisbogen zeichnen
-  drawMomVal(s, xD, yD1, colorElongation);                    // Momentanen Wert im Diagramm markieren 
-  ctx.fillStyle = colorElongation;                         // Farbe f�r Elongation (Zahlenwerte)  
-  writeValue(text14, s, meterUnicode, 3, xD, xD + 200, height - 50); // Momentanen Wert angeben
-  writeValue("(" + text13, sMax, meterUnicode + ")", 3, xD, xD + 200, height - 30);  // Maximalen Wert angeben
+  var sMax = l * alpha0;                                     // Максимальная величина удлинения (м)
+  var s = sMax * cosPhi;                                     // Мгновенное значение удлинения (м)
+  diagram(1, xD, yD1, sMax);                                  // Нарисовать диаграмму
+  alignText(symbolElongation, 1, xD - 25, yD1 - 130);             // Подпись (символ удлинения)
+  alignText(text22, 1, xD - 25, yD1 - 118);                       // Маркировка (единица м)
+  ctx.beginPath();                                         // Новый контур
+  ctx.lineWidth = 3;                                       // Толщина значения линии
+  ctx.strokeStyle = colorElongation;                        // Цвет для дуги окружности
+  var pos = (alpha >= 0);                                   // Флаг для отклонения вправо
+  var w0 = (pos ? Math.PI / 2 : Math.PI / 2 - alpha);            // Начальный угол для дуги окружности (дуги Мао)
+  var w1 = (pos ? Math.PI / 2 - alpha : Math.PI / 2);            // Конечный угол для дуги окружности (дуга Мао)
+  ctx.arc(ax, ay, lPix, w0, w1, true);                          // Подготовить дугу окружности
+  ctx.stroke();                                             // Нарисовать дугу окружности
+  drawMomVal(s, xD, yD1, colorElongation);                    // Отметить текущее значение на диаграмме
+  ctx.fillStyle = colorElongation;                         // Цвет для удлинения (числовые значения)
+  writeValue(text14, s, meterUnicode, 3, xD, xD + 200, height - 50); // Указать текущее значение
+  writeValue("(" + text13, sMax, meterUnicode + ")", 3, xD, xD + 200, height - 30);  // Указать максимальное значение
 }
 
-// Zeichnung zur Geschwindigkeit:
-// Diagramm f�r Zeitabh�ngigkeit der Geschwindigkeit, Pfeil f�r Geschwindigkeitsvektor, Zahlenwerte
+// Чертеж на скорость:
+// График зависимости скорости от времени, Стрелка для вектора скорости, Числовые значения
 
 function drawVelocity() {
-  var vMax = l * alpha0 * omega;                               // Maximaler Betrag der Geschwindigkeit (m/s)
-  var v = -vMax * sinPhi;                                    // Momentaner Wert der Geschwindigkeit (m/s)
-  diagram(2, xD, yD1, vMax);                                  // Diagramm zeichnen
-  alignText(symbolVelocity, 1, xD - 28, yD1 - 130);               // Beschriftung (Symbol f�r Geschwindigkeit)
-  alignText(text23, 1, xD - 28, yD1 - 118);                       // Beschriftung (Einheit m/s)
-  ctx.strokeStyle = colorVelocity;                         // Farbe f�r Geschwindigkeit
-  arrowPendulum(v * yPix, alpha0 * cosPhi);                     // Vektorpfeil f�r Geschwindigkeit
-  drawMomVal(v, xD, yD1);                                    // Momentanen Wert im Diagramm markieren
-  ctx.fillStyle = colorVelocity;                           // Farbe f�r Geschwindigkeit (Zahlenwerte)    
-  writeValue(text15, v, meterPerSecond, 3, xD, xD + 200, height - 50);    // Momentanen Wert angeben
-  writeValue("(" + text13, vMax, meterPerSecond + ")", 3, xD, xD + 200, height - 30);   // Maximalen Wert angeben
+  var vMax = l * alpha0 * omega;                               // Максимальное значение скорости (м/с)
+  var v = -vMax * sinPhi;                                    // Мгновенное значение скорости (м/с)
+  diagram(2, xD, yD1, vMax);                                  // Нарисовать диаграмму
+  alignText(symbolVelocity, 1, xD - 28, yD1 - 130);               // Надпись (символ скорости)
+  alignText(text23, 1, xD - 28, yD1 - 118);                       // Метка (единица измерения м/с)
+  ctx.strokeStyle = colorVelocity;                         // Цвет для скорости
+  arrowPendulum(v * yPix, alpha0 * cosPhi);                     // Векторная стрелка для скорости
+  drawMomVal(v, xD, yD1);                                    // Отметьте мгновенное значение на графике
+  ctx.fillStyle = colorVelocity;                           // Цвет для скорости (числовые значения)
+  writeValue(text15, v, meterPerSecond, 3, xD, xD + 200, height - 50);    // Укажите мгновенное значение
+  writeValue("(" + text13, vMax, meterPerSecond + ")", 3, xD, xD + 200, height - 30);   // Укажите максимальное значение
 }
 
-// Zeichnung zur Tangentialbeschleunigung:
-// Diagramm f�r Zeitabh�ngigkeit der Beschleunigung, Pfeil f�r Beschleunigungsvektor, Zahlenwerte
+// Рисунок тангенциального ускорения:
+// График зависимости ускорения от времени, Стрелка для вектора ускорения, Числовые значения
 
 function drawAcceleration() {
-  var aMax = l * alpha0 * omega * omega;                         // Maximaler Betrag der Tangentialbeschleunigung (m/s�)
-  var a = -aMax * cosPhi;                                    // Momentaner Wert der Tangentialbeschleunigung (m/s�)
-  diagram(3, xD, yD1, aMax);                                  // Diagramm zeichnen
-  centerTextIndex(symbolAcceleration, symbolTangential, xD - 30, yD1 - 130);     // Beschriftung (Symbol f�r Tangentialbeschleunigung) 
-  alignText(text24, 1, xD - 30, yD1 - 113);                       // Beschriftung (Einheit m/s�)
-  ctx.strokeStyle = colorAcceleration;                     // Farbe f�r Beschleunigung
-  arrowPendulum(a * yPix, alpha0 * cosPhi);                     // Vektorpfeil f�r Tangentialbeschleunigung
-  drawMomVal(a, xD, yD1);                                    // Momentanen Wert im Diagramm markieren
-  ctx.fillStyle = colorAcceleration;                       // Farbe f�r Beschleunigung (Zahlenwerte) 
+  var aMax = l * alpha0 * omega * omega;                          // Максимальная величина тангенциального ускорения (м/со)
+  var a = -aMax * cosPhi;                                    // Мгновенное значение тангенциального ускорения (м/со)
+  diagram(3, xD, yD1, aMax);                                  // Нарисовать график
+  centerTextIndex(symbolAcceleration, symbolTangential, xD - 30, yD1 - 130);     // Подпись (Символ для тангенциальное ускорение)
+  alignText(text24, 1, xD - 30, yD1 - 113);                       // Метка (единица измерения м/со)
+  ctx.strokeStyle = colorAcceleration;                     // Цвет для ускорения
+  arrowPendulum(a * yPix, alpha0 * cosPhi);                     // Векторная стрелка для тангенциального ускорения
+  drawMomVal(a, xD, yD1);                                     // Отметьте мгновенное значение на графике
+  ctx.fillStyle = colorAcceleration;                       // Цвет для ускорения (числовые значения)
   var mps2 = meterPerSecond2Unicode;
-  writeValue(text16, a, mps2, 3, xD - 30, xD + 220, height - 50);     // Momentanen Wert angeben
-  writeValue("(" + text13, aMax, mps2 + ")", 3, xD - 30, xD + 220, height - 30); // Maximalen Wert angeben
+  writeValue(text16, a, mps2, 3, xD - 30, xD + 220, height - 50);     // Указать мгновенное значение
+  writeValue("(" + text13, aMax, mps2 + ")", 3, xD - 30, xD + 220, height - 30); // Указать максимальное значение
 }
 
-// Zeichnung zur Tangentialkraft:
-// Diagramm f�r Zeitabh�ngigkeit der Kraft, Pfeil f�r Kraftvektor, Zahlenwerte
+// Рисунок касательной силы:
+// График зависимости силы от времени, Стрелка для вектора силы, Числовые значения
 
 function drawForce() {
-  var fMax = m * l * alpha0 * omega * omega;                       // Maximaler Betrag der Tangentialkraft (N)
-  var f = -fMax * cosPhi;                                    // Momentaner Wert der Tangentialkraft (N)
-  diagram(3, xD, yD1, fMax);                                  // Diagramm zeichnen
-  centerTextIndex(symbolForce, symbolTangential, xD - 30, yD1 - 130);  // Beschriftung (Symbol f�r Tangentialkraft)
-  alignText(text25, 1, xD - 30, yD1 - 113);                       // Beschriftung (Einheit N) 
-  ctx.strokeStyle = colorForce;                            // Farbe f�r Kraft
-  arrowPendulum(f * yPix, alpha0 * cosPhi);                     // Vektorpfeil f�r Tangentialkraft
-  drawMomVal(f, xD, yD1);                                    // Momentanen Wert im Diagramm markieren
-  ctx.fillStyle = colorForce;                              // Farbe f�r Kraft (Zahlenwerte)    
-  writeValue(text17, f, newton, 3, xD - 30, xD + 220, height - 50);    // Momentanen Wert angeben
-  writeValue("(" + text13, fMax, newton + ")", 3, xD - 30, xD + 220, height - 30);   // Maximalen Wert angeben
+  var fMax = m * l * alpha0 * omega * omega;                        // Максимальное значение касательной силы (N)
+  var f = -fMax * cosPhi;                                    // Мгновенное значение касательной силы (N)
+  diagram(3, xD, yD1, fMax);                                  // Нарисовать график
+  centerTextIndex(symbolForce, symbolTangential, xD - 30, yD1 - 130);  // Подпись (символ для Касательная сила)
+  alignText(text25, 1, xD - 30, yD1 - 113);                       // Метка (единица N)
+  ctx.strokeStyle = colorForce;                            // Цвет для силы
+  arrowPendulum(f * yPix, alpha0 * cosPhi);                     // Векторная стрелка для касательной силы
+  drawMomVal(f, xD, yD1);                                     // Отметьте мгновенное значение на графике
+  ctx.fillStyle = colorForce;                              // Цвет для силы (числовые значения)
+  writeValue(text17, f, newton, 3, xD - 30, xD + 220, height - 50);    // Укажите мгновенное значение
+  writeValue("(" + text13, fMax, newton + ")", 3, xD - 30, xD + 220, height - 30);   // Укажите максимальное значение
 }
 
-// Diagramm f�r Zeitabh�ngigkeit der potentiellen und kinetischen Energie:
-// (x,y) .... Ursprung (Pixel)
-// e ........ Gesamtenergie (J)
+// График для Временная зависимость потенциальной и кинетической энергии:
+// (x,y) .... Начало координат (пиксели)
+// e ........ Полная энергия (Дж)
 
 function diagramEnergy(x, y, e) {
-  horizontalAxis(x, y);                                     // Waagrechte Achse mit Beschriftung und Ticks
+  horizontalAxis(x, y);                                     // Горизонтальная ось с надписью и галочками
   verticalAxis(x, y, y + 20, y - 125, e);                          // Senkrechte Achse mit Beschriftung und Ticks
-  var x1 = x + 200;                                          // x-Koordinate f�r rechten Rand (Pixel)
-  var y1 = y - e * yPix;                                       // y-Koordinate f�r Gesamtenergie (Pixel)
-  ctx.beginPath();                                         // Neuer Pfad
-  ctx.moveTo(x, y1); ctx.lineTo(x1, y1);                     // Waagrechte Linie f�r Gesamtenergie vorbereiten
-  ctx.stroke();                                            // Linie zeichnen
-  var xx = x - tU * tPix;                                      // x-Koordinate des verschobenen Ursprungs (Pixel)
-  var per = tPer * 10;                                       // Periode f�r Sinuskurven (Pixel)
-  var ampl = e * yPix / 2;                                     // Amplitude f�r Sinuskurven (Pixel)
-  sinus(xx - tPer * 2.5, y - ampl, per, ampl, x, x + 200);              // Sinuskurve f�r potentielle Energie
-  sinus(xx - tPer * 7.5, y - ampl, per, ampl, x, x + 200);              // Sinuskurve f�r kinetische Energie
+  var x1 = x + 200;                                          // x-координата для правого края (пиксель)
+  var y1 = y - e * yPix;                                       // y-координата для полной энергии (пиксели)
+  ctx.beginPath();                                         // Новый путь
+  ctx.moveTo(x, y1); ctx.lineTo(x1, y1);                     // Подготовить горизонтальную линию для полной энергии
+  ctx.stroke();                                            // Нарисовать линию
+  var xx = x - tU * tPix;                                      // x-координата смещенного начала координат (пиксели)
+  var per = tPer * 10;                                       // Период для синусоидальных кривых (пикселей)
+  var ampl = e * yPix / 2;                                     // Амплитуда для синусоидальных кривых (пиксель)
+  sinus(xx - tPer * 2.5, y - ampl, per, ampl, x, x + 200);              // Синусоида для потенциальной энергии
+  sinus(xx - tPer * 7.5, y - ampl, per, ampl, x, x + 200);              // Синусоида для кинетической энергии
 }
 
-// Zeichnung f�r Energie:
+// Чертеж для энергии:
 
 function drawEnergy() {
-  var e = l * alpha0 * omega; e = m * e * e / 2;                     // Gesamtenergie (J)
-  var part = cosPhi * cosPhi;                                // Bruchteil f�r potentielle Energie
-  var eP = e * part, eK = e - eP;                              // Potentielle und kinetische Energie (J)
-  diagramEnergy(xD, yD2, e);                                 // Diagramm f�r Zeitabh�ngigkeit der beiden Energieformen 
-  centerTextIndex(symbolEnergy, symbolPotential, xD - 30, yD2 - 125);  // Beschriftung links (potentielle Energie) 
-  alignText(text26, 1, xD - 30, yD2 - 108);                       // Beschriftung links (Einheit J)
-  centerTextIndex(symbolEnergy, symbolKinetic, xD + 30, yD2 - 125);    // Beschriftung rechts (kinetische Energie)
-  alignText(text26, 1, xD + 30, yD2 - 108);                       // Beschriftung rechts (Einheit J)
-  ctx.fillStyle = colorElongation;                         // Farbe f�r potentielle Energie (bzw. Elongation)
-  writeValue(text18, eP, joule, 3, xD, xD + 200, height - 70);       // Momentaner Wert der potentiellen Energie    
-  ctx.fillStyle = colorVelocity;                           // Farbe f�r kinetische Energie
-  writeValue(text19, eK, joule, 3, xD, xD + 200, height - 50);       // Momentaner Wert der kinetischen Energie
-  ctx.fillStyle = "#000000";                               // Farbe f�r Gesamtenergie
-  writeValue(text20, e, joule, 3, xD, xD + 200, height - 30);        // Wert der Gesamtenergie
-  var dy = part * 100;                                       // H�he des Rechtecks f�r potentielle Energie (Pixel)
-  rectangle(300, 205, 50, dy, colorElongation);                // Rechteck f�r potentielle Energie
-  if (part > 0.001 || on)                                  // Falls potentielle Energie nicht zu klein ...
-    alignText(text18, 0, 360, 220);                           // ... Beschriftung potentielle Energie
-  rectangle(300, 205 + dy, 50, 100 - dy, colorVelocity);           // Rechteck f�r kinetische Energie
-  if (part < 0.999 || on)                                  // Falls kinetische Energie nicht zu klein ... 
-    alignText(text19, 0, 360, 300);                           // ... Beschriftung potentielle Energie
-  drawMomVal(eP, xD, yD2, colorElongation);                   // Markierung f�r momentane potentielle Energie
-  drawMomVal(eK, xD, yD2, colorVelocity);                     // Markierung f�r momentane kinetische Energie
+  var e = l * alpha0 * omega; e = m * e * e / 2;                     // Полная энергия (Дж)
+  var part = cosPhi * cosPhi;                                // Дробная часть для потенциальной энергии
+  var eP = e * part, eK = e - eP;                              // Потенциальная и кинетическая энергия (Дж)
+  diagramEnergy(xD, yD2, e);                                 // Диаграмма временной зависимости двух форм энергии
+  centerTextIndex(symbolEnergy, symbolPotential, xD - 30, yD2 - 125);  // Метка слева (потенциальная энергия)
+  alignText(text26, 1, xD - 30, yD2 - 108);                       // Надпись слева (единица J)
+  centerTextIndex(symbolEnergy, symbolKinetic, xD + 30, yD2 - 125);    // Надпись справа (кинетическая энергия)
+  alignText(text26, 1, xD + 30, yD2 - 108);                       // Надпись справа (единица J)
+  ctx.fillStyle = colorElongation;                         // Цвет для потенциальной энергии (соответственно. Элонгация)
+  writeValue(text18, eP, joule, 3, xD, xD + 200, height - 70);       // Мгновенное значение потенциальной энергии
+  ctx.fillStyle = colorVelocity;                           // Цвет для кинетической энергии
+  writeValue(text19, eK, joule, 3, xD, xD + 200, height - 50);       // Мгновенное значение кинетической энергии
+  ctx.fillStyle = "#000000";                               // Цвет для полной энергии
+  writeValue(text20, e, joule, 3, xD, xD + 200, height - 30);        // Значение полной энергии
+  var dy = part * 100;                                       // Высота прямоугольника для потенциальная энергия (пиксели)
+  rectangle(300, 205, 50, dy, colorElongation);                // Прямоугольник для потенциальной энергии
+  if (part > 0.001 || on)                                  // Если потенциальная энергия не слишком мала ...
+    alignText(text18, 0, 360, 220);                           // ... Маркировка потенциальной энергии
+  rectangle(300, 205 + dy, 50, 100 - dy, colorVelocity);           // Прямоугольник для кинетической энергии
+  if (part < 0.999 || on)                                  // Если кинетическая энергия не слишком мала ...
+    alignText(text19, 0, 360, 300);                           // ... Маркировка потенциальной энергии
+  drawMomVal(eP, xD, yD2, colorElongation);                   // Маркировка для мгновенной потенциальной энергии
+  drawMomVal(eK, xD, yD2, colorVelocity);                     // Маркировка для мгновенной кинетической энергии
 }
 
-// Grafikausgabe:
-// Seiteneffekt t, tU, phi, sinPhi, cosPhi, alpha, sinAlpha, cosAlpha, px, py
+// Вывод графика:
+// Боковой эффект t, tU, phi, sinPhi, cosPhi, альфа, синальфа, косальфа, px, py
 
 function paint() {
-  ctx.fillStyle = colorBackground;                         // Hintergrundfarbe
-  ctx.fillRect(0, 0, width, height);                          // Hintergrund ausf�llen
-  rectangle(ax - 50, ay - 5, 100, 5, "#000000");                   // Aufh�ngung (Decke)
-  if (on) {                                                // Falls Animation angeschaltet ...
-    var t1 = new Date();                                   // ... Aktuelle Zeit
-    var dt = (t1 - t0) / 1000;                                 // ... L�nge des Zeitintervalls (s)
-    if (slow) dt /= 10;                                    // ... Falls Zeitlupe, Zeitintervall durch 10 dividieren
-    t += dt;                                               // ... Zeitvariable aktualisieren
-    t0 = t1;                                               // ... Neuer Anfangszeitpunkt
+  ctx.fillStyle = colorBackground;                         // Цвет фона
+  ctx.fillRect(0, 0, width, height);                       // Размытие фона
+  rectangle(ax - 50, ay - 5, 100, 5, "");                  // Осветление (потолок)
+  if (on) {                                                // Если анимация включена ...
+    var t1 = new Date();                                   // ... Текущее время
+    var dt = (t1 - t0) / 1000;                             // ... Длительность временного интервала (интервалов)
+    if (slow) dt /= 10;                                    // ... В случае замедленного движения разделите временной интервал на 10
+    t += dt;                                               // ... Обновить переменную времени
+    t0 = t1;                                               // ... Новый начальный момент времени
   }
-  tU = (t < 5 ? 0 : t - 5);                                    // Zeit f�r Diagramm-Ursprung (s)
-  phi = omega * t;                                           // Phasenwinkel (Bogenma�) 
-  sinPhi = Math.sin(phi); cosPhi = Math.cos(phi);          // Trigonometrische Werte
-  pendulum();                                              // Pendel zeichnen
-  clock(ax, 340);                                           // Digitaluhr zeichnen
-  switch (nrSize) {                                        // Je nach betrachteter Gr��e ...
-    case 0: drawElongation(); break;                       // ... Zeichnung zur Elongation
-    case 1: drawVelocity(); break;                         // ... Zeichnung zur Geschwindigkeit
-    case 2: drawAcceleration(); break;                     // ... Zeichnung zur Tangentialbeschleunigung
-    case 3: drawForce(); break;                            // ... Zeichnung zur Tangentialkraft
-    case 4: drawEnergy(); break;                           // ... Zeichnung zur Energie
+  tU = (t < 5 ? 0 : t - 5);                                // Время начала (ов) r графика (ов)
+  phi = omega * t;                                         // Фазовый угол (дуговое значение)
+  sinPhi = Math.sin(phi); cosPhi = Math.cos(phi);          // Тригонометрические значения
+  pendulum();                                              // Рисование маятника
+  clock(ax, 340);                                          // Рисование цифровых часов
+  switch (nrSize) {                                        // В зависимости от рассматриваемой величины, величина e ...
+    case 0: drawElongation(); break;                       // ... Чертеж для удлинения
+    case 1: drawVelocity(); break;                         // ... Чертеж для скорости
+    case 2: drawAcceleration(); break;                     // ... Чертеж для тангенциального ускорения
+    case 3: drawForce(); break;                            // ... Рисунок касательной силы
+    case 4: drawEnergy(); break;                           // ... Рисунок энергии
+    case 5: ""; break;
   }
-  var s = text27 + ":  " + tPer.toPrecision(3) + " " + second;     // Zeichenkette f�r Schwingungsdauer
-  s = s.replace(".", decimalSeparator);                     // Eventuell Komma statt Punkt
-  ctx.fillStyle = "#000000";                               // Farbe f�r Text
-  alignText(s, 1, ax, height - 30);                             // Zeichenkette f�r Schwingungsdauer ausgeben
+  var s = text27 + ":  " + tPer.toPrecision(3) + " " + second;     // Строка длительности колебаний fr r
+  s = s.replace(".", decimalSeparator);                     // Возможно, запятая вместо точки
+  ctx.fillStyle = "#000000";                               // Цвет текста fr r
+  alignText(s, 1, ax, height - 30);                             // Вывод строки длительности колебаний fr r
 }
 
-document.addEventListener("DOMContentLoaded", start, false); // Nach dem Laden der Seite Start-Methode aufrufen
+document.addEventListener("DOMContentLoaded", start, false); // После загрузки страницы перейдите к методу запуска

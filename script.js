@@ -2,7 +2,7 @@
 
 var colorBackground = "#ffffff";                           // Цвет фона
 var colorClock1 = "#808080";                               // Цвет цифровых часов (auoen)
-var colorClock2 = "#000000";                               // Цвет фона дисплея
+var colorClock2 = "#505050";                               // Цвет фона дисплея
 var colorClock3 = "#ff0000";                               // Цвет цифр
 var colorElongation = "#008000";                           // Цвет для потенциальной
 var colorVelocity = "#ff0000";                             // Цвет для кинетической
@@ -406,7 +406,7 @@ function pendulum() {
 
 // Нарисуйте цифровые часы:
 
-function clock(x, y) {
+/* function clock(x, y) {
   rectangle(x - 60, y - 16, 120, 32, colorClock1);                 // Корпус
   rectangle(x - 50, y - 10, 100, 20, colorClock2);                 // Фон дисплея
   ctx.fillStyle = "#ff0000";                               // Цвет для цифр
@@ -417,7 +417,7 @@ function clock(x, y) {
   s = s.replace(".", decimalSeparator);                     // Возможно, заменить точку запятой
   while (s.length < 9) s = " " + s;                          // Заменить пробел в начале, возможно
   ctx.fillText(s, x, y + 5);                                   // Вывести время
-}
+} */
 
 // Нарисовать стрелку:
 // x1, y1 ... начальная точка
@@ -592,7 +592,7 @@ function centerTextIndex(s1, s2, x, y) {
   alignText(s2, 0, x0 + w1 + 1, y + 5);                             // Вывод индекса
 }
 
-// Чертеж удлинения:
+// Чертеж потенциалной энергии:
 // Диаграмма временной зависимости удлинения, дуга окружности для удлинения, Числовые значения
 
 function drawElongation() {
@@ -732,7 +732,7 @@ function paint() {
   phi = omega * t;                                         // Фазовый угол (дуговое значение)
   sinPhi = Math.sin(phi); cosPhi = Math.cos(phi);          // Тригонометрические значения
   pendulum();                                              // Рисование маятника
-  clock(ax, 340);                                          // Рисование цифровых часов
+ // clock(ax, 340);                                          // Рисование цифровых часов
   switch (nrSize) {                                        // В зависимости от рассматриваемой величины, величина e ...
     case 0: drawElongation(); break;                       // ... Чертеж для удлинения
     case 1: drawVelocity(); break;                         // ... Чертеж для скорости
